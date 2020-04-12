@@ -20,10 +20,9 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @package    DevAAC
- * @author     Daniel Speichert <daniel@speichert.pl>
- * @author     Wojciech Guziak <wojciech@guziak.net>
- * @copyright  2014 Developers.pl
+ * @package    DevAAC - Shop
+ * @author     Bruno Novais <cardososp@gmail.com>
+ * @copyright  2015 Bruno Novais
  * @license    http://opensource.org/licenses/MIT MIT
  * @version    master
  * @link       https://github.com/DevelopersPL/DevAAC
@@ -32,69 +31,73 @@
 namespace DevAAC\Models;
 
 use DevAAC\Helpers\DateTime;
+
 // https://github.com/illuminate/database/blob/master/Eloquent/Model.php
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['id','player_id','sale','itemtype','amount','price','expires_at','inserted','state']")
+ * @SWG\Model(required="['id','player_id','shop_id','price']")
  */
-class MarketHistory extends \Illuminate\Database\Eloquent\Model {
+class ShopHistory extends \Illuminate\Database\Eloquent\Model {
     /**
      * @SWG\Property(name="id", type="integer")
      * @SWG\Property(name="player_id", type="integer")
-     * @SWG\Property(name="sale", type="boolean")
-     * @SWG\Property(name="itemtype", type="integer")
-     * @SWG\Property(name="amount", type="integer")
+     * @SWG\Property(name="shop_id", type="integer")
      * @SWG\Property(name="price", type="integer")
-     * @SWG\Property(name="expires_at", type="DateTime::ISO8601")
-     * @SWG\Property(name="inserted", type="DateTime::ISO8601")
-     * @SWG\Property(name="state", type="integer")
+     * @SWG\Property(name="discount", type="integer")
+     * @SWG\Property(name="buy_date", type="DateTime::ISO8601")
+     * @SWG\Property(name="delivery_date", type="DateTime::ISO8601")
+     * @SWG\Property(name="code", type="string")
+     * @SWG\Property(name="delivery_status", type="integer")
      */
 
-    protected $table = 'market_history';
-
+    protected $table = 'shop_history';
     public $timestamps = false;
+    protected $guarded = array('id,code');
+    protected $hidden = array('end_date');
 
-    public $incrementing = false;
 
     public function player()
     {
         return $this->belongsTo('DevAAC\Models\Player');
     }
 
-    public function getExpiresAtAttribute()
+
+    public function getBuyDateAttribute()
     {
         $date = new DateTime();
-        $date->setTimestamp($this->attributes['expires_at']);
+        $date->setTimestamp($this->attributes['buy_date']);
         return $date;
     }
 
-    public function setExpiresAtAttribute($d)
+    public function setBuyDateAttribute($d)
     {
         if($d instanceof \DateTime)
-            $this->attributes['expires_at'] = $d->getTimestamp();
+            $this->attributes['buy_date'] = $d->getTimestamp();
         elseif((int) $d != (string) $d) { // it's not a UNIX timestamp
             $dt = new DateTime($d);
-            $this->attributes['expires_at'] = $dt->getTimestamp();
+            $this->attributes['buy_date'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
-            $this->attributes['expires_at'] = $d;
+            $this->attributes['buy_date'] = $d;
     }
 
-    public function getInsertedAttribute()
+    public function getDeliveryDateAttribute()
     {
         $date = new DateTime();
-        $date->setTimestamp($this->attributes['inserted']);
+        $date->setTimestamp($this->attributes['delivery_date']);
         return $date;
     }
 
-    public function setInsertedAttribute($d)
+    public function setDeliveryDateAttribute($d)
     {
         if($d instanceof \DateTime)
-            $this->attributes['inserted'] = $d->getTimestamp();
+            $this->attributes['delivery_date'] = $d->getTimestamp();
         elseif((int) $d != (string) $d) { // it's not a UNIX timestamp
             $dt = new DateTime($d);
-            $this->attributes['inserted'] = $dt->getTimestamp();
+            $this->attributes['delivery_date'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
-            $this->attributes['inserted'] = $d;
+            $this->attributes['delivery_date'] = $d;
     }
+
+
 }
