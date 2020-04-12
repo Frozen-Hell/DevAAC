@@ -39,6 +39,7 @@ $loader->setPsr4('DevAAC\\', APP_ROOT);
 $DevAAC = new \Slim\Slim(array(
     'debug' => ENABLE_DEBUG
 ));
+// ~~~~~~ YOU DONT COMMIT API KEYS!
 $DevAAC->add(new \PrerenderMiddleware('http://service.prerender.io/', 'V2wZRPbrYgbpZ5aGjbeO'));
 
 $DevAAC->add(new \Slim\Middleware\ContentTypes());
