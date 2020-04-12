@@ -20,31 +20,33 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @package    DevAAC - Shop
- * @author     Bruno Novais <cardososp@gmail.com>
- * @copyright  2015 Bruno Novais
+ * @package    DevAAC - ShopOffers
+ * @author     houses.php CopyPasters LLC
+ * @copyright  yah, no you didn't
  * @license    http://opensource.org/licenses/MIT MIT
  * @version    development
  * @link       https://github.com/novasdream/DevAAC
  */
 
-use DevAAC\Models\Shop;
+use DevAAC\Models\ShopOffers;
 use DevAAC\Models\Account;
 use DevAAC\Models\Player;
 use DevAAC\Models\ShopHistory;
 
+
+
 /**
  * @SWG\Resource(
  *  basePath="/api/v1",
- *  resourcePath="/houses",
+ *  resourcePath="/shops",
  *  @SWG\Api(
- *    path="/houses",
- *    description="Operations on houses",
+ *    path="/shops",
+ *    description="Operations on OT community greed",
  *    @SWG\Operation(
- *      summary="Get all houses",
+ *      summary="Get all sourcecodes $5000",
  *      notes="",
  *      method="GET",
- *      type="House",
+ *      type="PayToWin",
  *      nickname="getShopOffers"
  *   )
  *  )
@@ -101,14 +103,14 @@ $DevAAC->post(ROUTES_API_PREFIX.'/shops/:id/buy', function($id) use($DevAAC) {
     $player = Player::findOrFail($request->getAPIParam('player_id'));
 
     if($player->account->id != $DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
-        throw new InputErrorException('Voce nao tem permissao para comprar com esse personagem.', 403);
-        //throw new InputErrorException('You do not have permission to buy with this player.', 403);
+        //throw new InputErrorException('Voce nao tem permissao para comprar com esse personagem.', 403);
+        throw new InputErrorException('You do not have permission to buy with this player.', 403);
     $account = $player->account;
     $coins_need = ($account->shop_coins - $shop_offer->price);
 
     if( $coins_need < 0)
-        throw new InputErrorException('Voce nao tem coins suficientes, faltam '. $coins_need.' coins ' , 422);
-    //throw new InputErrorException('You dont have coins enough price['. $shop_offer->price .'] balance['.$player->balance.']' , 422);
+    //  throw new InputErrorException('Voce nao tem coins suficientes, faltam '. $coins_need.' coins ' , 422);
+        throw new InputErrorException('You do not have enough lines of OTCv8 source code. price['. $shop_offer->price .'] balance['.$player->balance.']' , 422);
     $shopHistory = DevAAC\Models\ShopHistory::create(
         array(
             'player_id' =>  $player->id,
