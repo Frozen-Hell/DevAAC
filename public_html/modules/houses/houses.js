@@ -35,6 +35,10 @@ DevAAC.controller('HouseController', ['$scope', '$routeParams', '$location', 'Ho
         $scope.house = house;
         $scope.ends = moment(house.bid_end).fromNow();
 
+        $scope.group = function(list, grouping) {
+            return _.groupBy(list, grouping);
+        };
+        $scope.grouping = "Thais";
         // Fetch house owner
         if(house.owner) {
             $scope.owner = {

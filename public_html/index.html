@@ -12,6 +12,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" type="text/css" href="assets/buttons.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/animate.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css"/>
     <style type="text/css">
         body {
             margin-top: 70px;
@@ -19,8 +23,9 @@
             /*
                 Lava background (240 KB): //i.imgur.com/4XIP7Ak.jpg
                 Grass background (230 KB): //i.imgur.com/d9HCIzB.jpg
+                Imgur TOS explicitly states they are not to be used as a CDN
             */
-            background-image: url(//i.imgur.com/d9HCIzB.jpg);
+            background-image: url(//127.0.0.1/imgur.tos.violation.png);
         }
         .page-header {
             margin-top: 0;
@@ -37,6 +42,8 @@
         /* Angular UI */
         .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
     </style>
+
+
     <!-- AngularJS -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.min.js"></script>
@@ -56,7 +63,9 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
     <!-- jsSHA -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/jsSHA/1.5.0/sha1.js"></script>
+    <script src="/assets/js/noty/packaged/jquery.noty.packaged.js"></script>
 </head>
+
 <body ng-controller="MainController" ng-cloak>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
@@ -71,24 +80,75 @@
                 <a ng-hide="name" class="navbar-brand" ng-href="/">DevAAC</a>
             </div>
 
+
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div ng-controller="NavigationController" class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
+
                     <li ng-class="{active:isActive('/about')}"><a href ng-href="/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
                     <li ng-class="{active:isActive('/players/online')}"><a href ng-href="/players/online"><i class="glyphicon glyphicon-eye-open"></i> Who is online?</a></li>
-                    <li ng-class="{active:isActive('/highscores')}"><a href ng-href="/highscores"><i class="glyphicon glyphicon-stats"></i> Highscores</a></li>
-                    <li ng-class="{active:isActive('/guilds')}"><a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="glyphicon glyphicon-link"></i> Guilds</a>
+
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" id="comunidade-btn"></i><span class="fa fa-users"> Comunidades <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href ng-href="/guilds">Guilds List</a></li>
-                            <li><a href ng-href="/guilds/wars">Guilds Wars</a></li>
+                            <li ng-class="{active:isActive('/houses')}"><a href ng-href="/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
+                            <li ng-class="{active:isActive('/guilds')}"><a href ng-href="/guilds" class="fa fa-shield"> Guilds List</a></li>
+                            <li ng-class="{active:isActive('/guilds/wars')}"><a href ng-href="/guilds/wars" class="fa fa-shield"> Guilds Wars</a></li>
+                            <li class="divider"></li>
+                            <li ng-class="{active:isActive('/highscores')}"><a href ng-href="/highscores"><i class="glyphicon glyphicon-stats"></i> Highscores</a></li>
+                            <li ng-class="{active:isActive('/guilds')}"><a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="glyphicon glyphicon-link"></i> Guilds</a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href ng-href="/guilds">Guilds List</a></li>
+                                    <li><a href ng-href="/guilds/wars">Guilds Wars</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" id="biblioteca-btn"></i><span class="glyphicon glyphicon-book"> Biblioteca <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-class="{active:isActive('/items')}"><a href ng-href="/items"> Items</a></li>
+                            <li ng-class="{active:isActive('/monsters')}"><a href ng-href="/monsters"> Monsters</a></li>
+                        </ul>
+                    </li>
+
                     <li ng-class="{active:isActive('/houses')}"><a href ng-href="/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" id="shop-btn"></i><span class="fa fa-cart-arrow-down"> Shop <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-class="{active:isActive('/shop')}"><a href ng-href="/shop"><i class="glyphicon glyphicon-shopping-cart "></i> Shop</a></li>
+                            <li ng-class="{active:isActive('/donation')}"><a href ng-href="/donation"><i class="fa fa-heart "></i> Doação</a></li>
+                        </ul>
+                    </li>
+                    <li ng-if="!isLoggedIn()" ng-class="{active:isActive('/account/register')}"><a href ng-href="/account/register"><i class="glyphicon glyphicon-hand-right"></i> Register</a></li>
+                    <li ng-if="!isLoggedIn()" class="dropdown">
+                        <a data-toggle="dropdown" id="loading-login-btn"></i> Login <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li style="margin: 5px 15px 0px 15px">
+                                <form ng-if="!isLoggedIn()" ng-submit="Login()" class="navbar-form navbar-right">
+                                    <fieldset>
+                                        <label>
+                                            <span>Account name:</span>
+                                            <input ng-model="form.name" class="form-control" placeholder="Account name" type="text" required>
+                                        </label>
+                                        <label>
+                                            <span>Password:</span>
+                                            <input ng-model="form.password" class="form-control" placeholder="Password" type="password" required>
+                                        </label>
+                                        <div class="row-fluid">
+                                            <div class="span5"><button type="submit" class="btn btn-block btn-primary" id="loading-login-btn" data-loading-text="Logging in...">Log in</button></div>
+                                            <div class="span7"><a class="btn btn-block" href="recover.php">Forgot password?</a></div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
                 <ul ng-if="isLoggedIn()" class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown">Welcome {{account.name}}!<b class="caret"></b></a>
+                    <li ng-if="isLoggedIn()" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i>Welcome {{account.name}}!<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href ng-href="/account"><i class="glyphicon glyphicon-cog"></i> My account</a></li>
                             <li class="divider"></li>
@@ -113,11 +173,13 @@
                             <li><a href ng-href="/account/register">Register</a></li>
                             <li class="divider"></li>
                             <li><a data-toggle="modal" data-target="#lostModal" href="javascript://">Lost password?</a></li>
+
                         </ul>
                     </div>
                 </form>
             </div>
             <!-- /.navbar-collapse -->
+
         </div>
         <!-- /.container -->
     </nav>
@@ -159,7 +221,7 @@
             </div>
 
             <div class="col-sm-9 well well-lg" id="view" ng-view></div>
-            
+
             <div class="col-sm-3" ng-controller="WidgetController">
                 <div class="well well-sm">
                     <a href ng-href="/players/online"><h3 class="text-center"><i class="glyphicon glyphicon-user"></i> {{info.players_online_count}} / {{info.maxPlayers}} online</h3></a>
@@ -244,6 +306,9 @@
     <script src="/modules/houses/houses.js"></script>
     <script src="/modules/players/players.js"></script>
     <script src="/modules/about/about.js"></script>
+    <script src="/modules/shop/shop.js"></script>
+    <script src="/modules/item/items.js"></script>
+    <script src="/modules/donation/donation.js"></script>
     <script src="/modules/404/404.js"></script>
     <script src="/modules/server/server.js"></script>
 </body>

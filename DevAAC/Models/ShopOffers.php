@@ -20,21 +20,39 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @package    DevAAC
- * @author     Daniel Speichert <daniel@speichert.pl>
- * @author     Wojciech Guziak <wojciech@guziak.net>
- * @copyright  2014 Developers.pl
+ * @package    DevAAC - ShopOffers
+ * @author     Bruno Novais <cardososp@gmail.com>
+ * @copyright  2015 Bruno Novais
  * @license    http://opensource.org/licenses/MIT MIT
- * @version    master
- * @link       https://github.com/DevelopersPL/DevAAC
+ * @version    development
+ * @link       https://github.com/novasdream/DevAAC
  */
 
 namespace DevAAC\Models;
 
-class AccountPublic extends Account {
+use DevAAC\Helpers\DateTime;
 
-    protected $table = 'accounts';
+// https://github.com/illuminate/database/blob/master/Eloquent/Model.php
+// https://github.com/otland/forgottenserver/blob/master/schema.sql
 
-    protected $hidden = array('name', 'password', 'email','shop_coins' );
+/**
+ * @SWG\Model(required="['id','name','description','price','image_url','level_need','start_date','end_date']")
+ */
+class Shop extends \Illuminate\Database\Eloquent\Model {
+    /**
+     * @SWG\Property(name="id", type="integer")
+     * @SWG\Property(name="name", type="string")
+     * @SWG\Property(name="description", type="string")
+     * @SWG\Property(name="price", type="integer")
+     * @SWG\Property(name="image_url", type="string")
+     * @SWG\Property(name="level_need", type="integer")
+     * @SWG\Property(name="start_date", type="DateTime::ISO8601")
+     * @SWG\Property(name="end_date", type="DateTime::ISO8601")
+     */
+    public $timestamps = false;
+
+    protected $guarded = array('id');
+
+    protected $hidden = array('end_date');
 
 }

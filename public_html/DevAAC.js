@@ -31,6 +31,7 @@ var Cookie = {
 // Initiate DevAAC
 var DevAAC = angular.module('DevAAC', ['ngRoute', 'ngResource', 'ngSanitize', 'ui.bootstrap']);
 
+
 DevAAC.config(['$locationProvider', function ($locationProvider) {
     $locationProvider.html5Mode({
         enabled: true,
@@ -105,6 +106,25 @@ DevAAC.factory('StatusMessage', function() {
         }
     }
 });
+
+function generate(type, text) {
+    var n = noty({
+        text        : text,
+        type        : type,
+        dismissQueue: true,
+        layout      : 'topLeft',
+        closeWith   : ['click'],
+        theme       : 'relax',
+        maxVisible  : 4,
+        timeout: 5000,
+        animation   : {
+            open  : 'animated bounceInLeft',
+            close : 'animated bounceOutLeft',
+            easing: 'swing',
+            speed : 500
+        }
+    });
+}
 
 DevAAC.config(function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');

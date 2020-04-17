@@ -82,8 +82,8 @@ DevAAC.controller('FooterController', ['$scope',
     }
 ]);
 
-DevAAC.controller('WidgetController', ['$scope', '$location', 'Player',
-    function($scope, $location, Player) {
+DevAAC.controller('WidgetController', ['$scope', '$location', 'Player', 'Item',
+    function($scope, $location, Player,Item) {
         $scope.highExperience = Player.highExperience();
 
         $scope.goToPlayer = function() {
@@ -98,5 +98,19 @@ DevAAC.controller('WidgetController', ['$scope', '$location', 'Player',
         $scope.findPlayers = function(name) {
             return Player.query({q: name, limit: 10, fields: 'name'}).$promise;
         };
+
+        $scope.goToItem = function() {
+            Item.get({id: $scope.searchItem}, function(value) {
+                $scope.searchError = '';
+                $location.path('/items/' + value.name);
+            }, function(httpResponse) {
+                $scope.searchError = 'Item not found!';
+            });
+        };
+
+        $scope.findItems = function(name) {
+            return Item.query({q: name, limit: 10, fields: 'name'}).$promise;
+        };
+
     }
 ]);

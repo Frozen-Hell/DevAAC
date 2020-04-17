@@ -31,6 +31,7 @@
 
 // Autoload our dependencies with Composer
 $loader = require '../vendor/autoload.php';
+require 'PrerenderMiddleware.php';
 $loader->setPsr4('DevAAC\\', APP_ROOT);
 
 
@@ -186,6 +187,9 @@ require('routes/houses.php');
 require('routes/market.php');
 require('routes/players.php');
 require('routes/server.php');
+require('routes/shops.php');
+require('routes/items.php');
+require('routes/monsters.php');
 
 $DevAAC->get(ROUTES_API_PREFIX . '/news', function () use ($DevAAC) {
     $news = [];
